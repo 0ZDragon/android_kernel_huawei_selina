@@ -1,0 +1,355 @@
+/* touch panel config */
+&tlmm {
+		/* add pingrp for touchscreen */
+		pmx_ts_int_active {
+			ts_int_active: ts_int_active {
+				mux {
+					pins = "gpio65";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio65";
+					drive-strength = <8>;
+					bias-disable;
+				};
+			};
+		};
+
+		pmx_ts_int_suspend {
+			ts_int_suspend: ts_int_suspend {
+				mux {
+					pins = "gpio65";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio65";
+					drive-strength = <2>;
+					bias-pull-down;
+				};
+			};
+		};
+
+		pmx_ts_reset_active {
+			ts_reset_active: ts_reset_active {
+				mux {
+					pins = "gpio64";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio64";
+					drive-strength = <8>;
+					bias-disable;
+				};
+			};
+		};
+
+		pmx_ts_reset_suspend {
+			ts_reset_suspend: ts_reset_suspend {
+				mux {
+					pins = "gpio64";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio64";
+					drive-strength = <2>;
+					bias-pull-down;
+				};
+			};
+		};
+
+		pmx_ts_release {
+			ts_release: ts_release {
+				mux {
+					pins = "gpio65", "gpio64";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio65", "gpio64";
+					drive-strength = <2>;
+					bias-disable;
+				};
+			};
+		};
+		ts_int_high {
+			ts_int_high: ts_int_high {
+				mux {
+					pins = "gpio65";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio65";
+					drive-strength = <8>;
+					bias-disable;
+					output-high;
+				};
+			};
+		};
+		ts_int_low {
+			ts_int_low: ts_int_low {
+				mux {
+					pins = "gpio65";
+					function = "gpio";
+				};
+
+				config {
+					pins = "gpio65";
+					drive-strength = <8>;
+					bias-pull-down;
+					output-low;
+				};
+			};
+		};
+};
+
+&soc {
+	i2c@78b7000{
+		status = "ok";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		qcom,clk-freq-out = <400000>;
+	};
+	ts_kit {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "huawei,ts_kit";
+		bus_type = "i2c";
+		bus_id = <3>;
+		product = "selina";
+		reset_gpio = <&tlmm 64 0x00>;
+		irq_gpio = <&tlmm 65 0x2008>;
+		fpga_flag = <0>;
+		focaltech@38 {
+			compatible = "fts";
+			ic_type = <2>;
+			slave_address = <0x38>;
+			pram_projectid_addr = <0xd7a0>;
+			support_get_tp_color = <1>;
+			need_wd_check_status = <1>;
+			check_status_watchdog_timeout = <2000>;
+			x_max = <720>;
+			y_max = <1280>;
+			x_max_mt = <720>;
+			y_max_mt = <1280>;
+			unite_cap_test_interface =<1>;
+			report_rate_test =<0>;
+			vci_gpio_type = <0>;
+			vci_regulator_type = <1>;
+			vddio_gpio_type = <0>;
+			vddio_regulator_type = <1>;
+			chip_id = <0x87>;
+			hard_reset_delay = <200>;
+			erase_min_delay = <1350>;
+			calc_crc_delay = <300>;
+			reboot_delay = <300>;
+			erase_query_delay = <50>;
+			write_flash_query_times = <30>;
+			read_ecc_query_times = <100>;
+			erase_flash_query_times = <15>;
+			upgrade_loop_times = <5>;
+			glove_switch_addr = <0xC0>;
+			holster_switch_addr = <0xC1>;
+			gesture_supported = <1>;
+			irq_config = <3>;
+			algo_id = <1>;
+			is_in_cell = <0>;
+			SLA2120 {
+				producer = "ofim";
+				ic_type = <2>;
+				compatible = "fts-FTS5X46P00";
+				threshold,raw_data_min = <8000>;
+				threshold,raw_data_max = <16000>;
+				threshold,cb_test_min = <0>;
+				threshold,cb_test_max = <250>;
+				threshold,scap_raw_data_min = <2000>;
+				threshold,scap_raw_data_max = <20000>;
+				threshold,short_circuit_min = <500>;
+				//threshold,open_test_cb_min = <100>;
+				threshold,lcd_noise_max = <60>;
+			};
+			SLA2121 {
+				producer = "ofim";
+				ic_type = <2>;
+				compatible = "fts-SELI440000";
+				threshold,raw_data_min = <8000>;
+				threshold,raw_data_max = <16000>;
+				threshold,cb_test_min = <0>;
+				threshold,cb_test_max = <250>;
+				threshold,scap_raw_data_min = <2000>;
+				threshold,scap_raw_data_max = <20000>;
+				threshold,short_circuit_min = <500>;
+				//threshold,open_test_cb_min = <100>;
+				threshold,lcd_noise_max = <60>;
+			};
+			SLA2122 {
+				producer = "djn";
+				ic_type = <2>;
+				compatible = "fts-SELI442400";
+				threshold,raw_data_min = <6000>;
+				threshold,raw_data_max = <13000>;
+				threshold,cb_test_min = <0>;
+				threshold,cb_test_max = <250>;
+				threshold,scap_raw_data_min = <2000>;
+				threshold,scap_raw_data_max = <20000>;
+				threshold,short_circuit_min = <500>;
+				//threshold,open_test_cb_min = <100>;
+				threshold,lcd_noise_max = <60>;
+			};
+		};
+		goodix@5d {
+			compatible = "goodix";
+			ic_type = <0>;
+			slave_address = <0x5d>;
+			pram_projectid_addr = <0x81a0>;
+			support_get_tp_color = <1>;
+			irq_config = <2>;
+			unite_cap_test_interface =<1>;
+			algo_id = <2>;
+			x_max = <720>;
+			y_max = <1280>;
+			x_max_mt = <720>;
+			y_max_mt = <1280>;
+			product_id = "GT917D";
+			tools_support;
+			need_wd_check_status = <1>;
+			check_status_watchdog_timeout = <2000>;
+			roi_data_size = <7 7>;
+			gesture_supported = <1>;
+			pinctrl-names = "pmx_ts_active","pmx_ts_suspend","pmx_ts_release","ts_int_high","ts_int_low";
+			pinctrl-0 = <&ts_int_active &ts_reset_active>;
+			pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+			pinctrl-2 = <&ts_release>;
+			pinctrl-3 = <&ts_int_high>;
+			pinctrl-4 = <&ts_int_low>;
+			SENSORID0 {
+				compatible = "goodix-sensorid-0";
+				producer = "txd";
+				y_max_mt = <1280>;
+				x_max_mt = <720>;
+				raw_data_limit = <4651 1667 700>;     /*rawdata-max*/
+				shortcircut_threshold = <10 800 800 800 500 500 28>;
+				normal_config = [
+				51 D0 02 00 05 0A FC 30 21 C8 28
+				08 50 37 03 05 00 00 60 62 00 00
+				05 16 18 20 14 C6 27 BB 2A 2C B8
+				08 7C 06 00 C3 33 91 00 00 00 00
+				00 02 C0 14 19 00 1A 23 52 8A 90
+				84 14 2D 00 04 B7 26 00 9F 2D 00
+				8B 35 00 7A 3F 00 6C 4B 00 6C 00
+				00 00 00 00 00 00 00 00 00 00 00
+				22 00 00 00 00 00 00 02 00 00 0F
+				28 00 03 00 00 32 06 50 00 00 00
+				00 37 00 01 02 03 04 05 06 07 08
+				09 0A 15 14 13 12 11 10 0F 0E 0D
+				0C 0B FF FF FF FF FF FF FF FF 04
+				00 02 05 06 08 1E 1F 20 22 24 28
+				29 FF FF FF FF 64 31 00 00 00 88
+				70 12 00 28 4E 5A 14 14 41 00 1E
+				06 66 66 00 23 FF 00 4B 00 00 00
+				00 00 00 00 00 00 00 00 00 32 00
+				00 00 00 0A 00 1E 50 00 78 78 33
+				0C 23 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 2E 01];
+				glove_config = [];
+				holster_config = [];
+				tptest_config = [
+				00 D0 02 00 05 0A 0C 00 01 08
+				28 05 50 32 03 05 00 00 00 00
+				00 00 00 00 00 00 00 86 27 BB
+				50 52 31 0D 00 00 00 9B 02 11
+				00 00 00 00 00 03 24 32 00 00
+				00 0F 94 94 00 02 07 00 00 04
+				8C 13 00 5E 1E 00 40 30 00 2F
+				4C 00 27 78 00 27 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 01 02 03 04 05 06 07
+				08 09 0A 15 14 13 12 11 10 0F
+				0E 0D 0C 0B FF FF FF FF FF FF
+				FF FF 04 00 02 05 06 08 1E 1F
+				20 22 24 28 29 FF FF FF FF 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 0C 01];
+			};
+			SENSORID2 {
+				compatible = "goodix-sensorid-2";
+				producer = "yj";
+				y_max_mt = <1280>;
+				x_max_mt = <720>;
+				raw_data_limit = <3035 1171 395>;     /*rawdata-max*/
+				shortcircut_threshold = <10 800 800 800 500 500 28>;
+				normal_config = [
+				43 D0 02 00 05 0A 3D 12 01 0A 28
+				05 5A 46 03 05 00 00 60 62 00 00
+				05 16 1A 24 14 87 26 BB 50 52 9D
+				09 00 00 00 DB 22 11 00 00 00 00
+				00 02 00 15 0C 00 23 3C 6E 94 90
+				02 07 41 00 04 98 3F 00 89 48 00
+				7E 51 00 75 5B 00 6D 67 00 6D 00
+				00 00 00 00 00 00 00 00 00 00 02
+				11 00 00 00 00 00 FF E7 00 00 0A
+				28 00 00 00 00 00 06 3C 00 00 00
+				00 28 00 01 02 03 04 05 06 07 08
+				09 0A 15 14 13 12 11 10 0F 0E 0D
+				0C 0B FF FF FF FF FF FF FF FF 00
+				02 04 05 06 08 0A 1E 1F 20 22 24
+				28 FF FF FF FF 64 31 00 00 00 88
+				70 12 00 00 00 00 00 00 00 00 00
+				07 78 44 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 32 00
+				00 00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 E4 01];
+				glove_config = [];
+				holster_config = [];
+				tptest_config = [
+				00 D0 02 00 05 0A 0D 00 01 08
+				28 05 50 3C 03 05 00 00 00 00
+				00 00 00 00 00 00 00 87 26 BB
+				5A 5C D9 0B 00 00 01 BB 02 11
+				00 00 00 00 00 03 20 32 00 00
+				00 0F 94 94 00 02 07 00 00 04
+				8D 13 00 5D 1E 00 3E 30 00 2C
+				4C 00 24 78 00 24 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 01 02 03 04 05 06 07
+				08 09 0A 15 14 13 12 11 10 0F
+				0E 0D 0C 0B FF FF FF FF FF FF
+				FF FF 00 02 04 05 06 08 0A 1E
+				1F 20 22 24 28 FF FF FF FF 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 00 00 00 00
+				00 00 00 00 00 00 54 01];
+			};
+		};
+	};
+
+	/*To disable gen-vkeys.c probe,avoid generate kobject*/
+	gen-vkeys {
+		compatible = "huawei,gen-vkeys";
+		label = "synaptics_rmi4_i2c";
+		qcom,disp-maxx = <720>;
+		qcom,disp-maxy = <1280>;
+		qcom,panel-maxx = <720>;
+		qcom,panel-maxy = <1369>;
+		qcom,key-codes = <158 172 139>;
+	};
+};
+

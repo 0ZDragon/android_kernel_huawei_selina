@@ -1,0 +1,7 @@
+&i2c_6 {
+	status = "ok";
+	sm5106@3E {
+		compatible = "hw,sm5106";
+		reg = <0x3E>;
+	};
+};

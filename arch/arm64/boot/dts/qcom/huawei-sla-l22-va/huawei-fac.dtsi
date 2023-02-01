@@ -1,0 +1,10 @@
+/{
+		huawei_fac_info {
+		compatible = "huawei,hw_fac_info";
+		fac,product_name = "SLA-L22";
+		fac,hardware_ver = "SH1SLA-L22";
+		fac,software_ver = "SLA_L22_VA";
+		fac,simcard_adapt = "support";
+		status = "ok";
+	};
+};

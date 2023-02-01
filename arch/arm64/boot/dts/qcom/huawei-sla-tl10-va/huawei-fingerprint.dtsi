@@ -1,0 +1,129 @@
+/ {
+		reserved-memory {
+			tzapp_mem: tzapp_region@0 {
+                                compatible = "removed-dma-pool";
+                                no-map;
+				reg = <0x0 0x92300000 0x0 0x1900000>;
+				label = "tzapp_mem";
+			};
+		};
+};
+
+&soc {
+    /delete-node/ qseecom@85b00000;
+};
+
+&soc {
+		qcom_seecom: qseecom@92300000 {
+		compatible = "qcom,qseecom";
+		reg = <0x92300000 0x1900000>;
+		reg-names = "secapp-region";
+		qcom,hlos-num-ce-hw-instances = <1>;
+		qcom,hlos-ce-hw-instance = <0>;
+		qcom,qsee-ce-hw-instance = <0>;
+		qcom,disk-encrypt-pipe-pair = <2>;
+		qcom,support-fde;
+		qcom,msm-bus,name = "qseecom-noc";
+		qcom,msm-bus,num-cases = <4>;
+		qcom,msm-bus,num-paths = <1>;
+		qcom,support-bus-scaling;
+		qcom,msm-bus,vectors-KBps =
+			<55 512 0 0>,
+			<55 512 0 0>,
+			<55 512 120000 1200000>,
+			<55 512 393600 3936000>;
+		clocks = <&clock_gcc clk_crypto_clk_src>,
+			 <&clock_gcc clk_gcc_crypto_clk>,
+			 <&clock_gcc clk_gcc_crypto_ahb_clk>,
+			 <&clock_gcc clk_gcc_crypto_axi_clk>;
+		clock-names = "core_clk_src", "core_clk",
+				"iface_clk", "bus_clk";
+		qcom,ce-opp-freq = <100000000>;
+	};
+};
+
+&tlmm {
+	fingerprint_moduleid_pin {
+		qcom,num-grp-pins = <1>;
+		label = "moduleid_pin";
+		fingerprint_moduleid_default: fingerprint_moduleid_default {
+			mux {
+				pins = "gpio98";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio98";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+		fingerprint_moduleid_idle: fingerprint_moduleid_idle {
+			mux {
+				pins = "gpio98";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio98";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
+	};
+
+	pmx_mdss: pmx_mdss {
+        mdss_dsi_active: mdss_dsi_active {
+            mux {
+                pins = "gpio60";
+                function = "gpio";
+            };
+            config {
+                pins = "gpio60";
+                drive-strength = <8>; /* 8 mA */
+                bias-disable = <0>; /* no pull */
+                output-high;
+            };
+        };
+        mdss_dsi_suspend: mdss_dsi_suspend {
+            mux {
+                pins = "gpio60";
+                function = "gpio";
+            };
+            config {
+                pins = "gpio60";
+                drive-strength = <2>; /* 2 mA */
+                bias-pull-down; /* pull down */
+            };
+        };
+    };
+};
+
+&i2c_5 {
+        status = "disabled";
+};
+
+&spi_5 {
+	status = "ok";
+	fingerprint@0 {
+		compatible = "fpc,fingerprint";
+		reg = <0>;
+		interrupt-parent = <&tlmm>;
+		spi-max-frequency = <5000000>;
+		fingerprint,navigation_adjust1 = <0>;
+		fingerprint,navigation_adjust2 = <270>;
+		interrupts = <48 0x0>;
+		fingerprint,irq_gpio = <&tlmm 48 0>;
+		fingerprint,reset_gpio = <&tlmm 99 0>;
+		fingerprint,moduleid_gpio = <&tlmm 98 0>;
+		fingerprint,moduleid_high = "QT";
+		fingerprint,moduleid_low = "OF";
+		fingerprint,moduleid_float = "PR";
+		vdd-supply = <&pm8917_l5>;
+		fingerprint,vdd = "vdd";
+                avdd-supply = <&pm8917_l10>;
+                fingerprint,avdd = "avdd";
+		pinctrl-names = "default", "idle";
+		pinctrl-0 = <&fingerprint_moduleid_default>;
+		pinctrl-1 = <&fingerprint_moduleid_idle>;
+		status = "ok";
+	};
+};

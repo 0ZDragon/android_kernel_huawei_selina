@@ -1,0 +1,103 @@
+/* Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/{
+       huawei_audio_info {
+               compatible = "hw,hw_audio_info";
+               product-identifier = "sla";
+               builtin-master-mic-exist;
+		builtin-second-mic-exist;
+               hand_held_dual_mic_strategy;
+		loud_speaker_second_mic_strategy;
+               /*disable lvm: set voice-lvm-mode 1*/
+               voice-lvm-mode = "1";
+               status = "ok";
+       };
+};
+
+/* delete node for wsa spk config of qcom */
+&i2c_2 {
+        /delete-node/ wsa881x-i2c-codec@e;
+        /delete-node/ wsa881x-i2c-codec@44;
+        /delete-node/ wsa881x-i2c-codec@f;
+        /delete-node/ wsa881x-i2c-codec@45;
+};
+&tlmm {
+      ext_spk_gpio_ctl {
+                ext_pa_gpio_line_sus:ext_pa_gpio_line_sus{
+                        mux {
+                                pins = "gpio68";
+                                function = "gpio";
+                        };
+                        config {
+                                pins = "gpio68";
+                                drive-strength = <16>;
+                                bias-disable;
+                                output-low;
+                        };
+                };
+                ext_pa_gpio_line_act:ext_pa_gpio_line_act{
+                        mux {
+                                pins = "gpio68";
+                                function = "gpio";
+                        };
+                        config {
+                                pins = "gpio68";
+                                drive-strength = <16>;
+                                bias-pull-down;
+                                output-high;
+                        };
+                };
+        };
+};
+
+&int_codec {
+	status = "okay";
+	qcom,msm-mbhc-hphl-swh = <1>;
+        qcom,spk-hs-turnoff-hph-bypass = <1>;
+	qcom,msm-gpios =
+		"pri_i2s",
+		"ext_spk_gpio";
+	qcom,pinctrl-names =
+		"all_off",
+		"pri_i2s_act",
+		"ext_spk_gpio_active",
+		"pri_i2s_ext_spk_gpio_active";
+	pinctrl-names =
+		"all_off",
+		"pri_i2s_act",
+		"ext_spk_gpio_active",
+		"pri_i2s_ext_spk_gpio_active";
+		pinctrl-0 = <&cdc_pdm_lines_sus &cdc_pdm_lines_2_sus &ext_pa_gpio_line_sus>;
+		pinctrl-1 = <&cdc_pdm_lines_act &cdc_pdm_lines_2_act>;
+		pinctrl-2 = <&ext_pa_gpio_line_act>;
+		pinctrl-3 = <&cdc_pdm_lines_act &cdc_pdm_lines_2_act &ext_pa_gpio_line_act>;
+		qcom,cdc-us-euro-gpios;
+		qcom,msm-spk-ext-pa;
+		qcom,msm-hs-micbias-type = "internal";
+	qcom,audio-routing =
+		"RX_BIAS", "MCLK",
+		"SPK_RX_BIAS", "MCLK",
+		"INT_LDO_H", "MCLK",
+		"MIC BIAS External", "Handset Mic",
+		"MIC BIAS Internal2", "Headset Mic",
+		"MIC BIAS External", "Secondary Mic",
+		"AMIC1", "MIC BIAS External",
+		"AMIC2", "MIC BIAS Internal2",
+		"AMIC3", "MIC BIAS External";
+};
+
+&int_codec {
+	qcom,model = "msm8952-snd-card-mtp";
+	qcom,msm-spk-ext-pa = <&tlmm 68 0>;
+	qcom,msm-ext-pa = "primary";
+};
